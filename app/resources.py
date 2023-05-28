@@ -44,6 +44,12 @@ class CourseById(Resource):
         db.session.commit()
         return course, 200
 
+    def delete(self, id):
+        course = Course.query.get(id)
+        db.session.delete(course)
+        db.session.commit()
+        return {"msg":"Deleted successfully"}
+
 
 @ns.route("/students")
 class ViewStudents(Resource):
@@ -74,3 +80,9 @@ class StudentById(Resource):
         student.course_id = ns.payload.get('course_id')
         db.session.commit()
         return student, 200
+
+    def delete(self, id):
+        student = Student.query.get(id)
+        db.session.delete(student)
+        db.session.commit()
+        return {"msg":"Deleted successfully"}
