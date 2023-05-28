@@ -2,11 +2,14 @@ from flask_restx import Resource, Namespace
 import random
 from .models import Course, Student
 from app.extensions import db
-from app.api_models import course_model, student_model, add_course_model, add_student_model
+from app.api_models import (course_model,
+                            student_model,
+                            add_course_model,
+                            add_student_model)
 
 ns = Namespace("api")
 
-@ns.route("/hello")
+@ns.route("/test-get-random-number")
 class Hello(Resource):
     def get(self):
         i = random.randint(1,100)
@@ -27,6 +30,12 @@ class ViewCourses(Resource):
         db.session.commit()
         return course, 201
 
+@ns.route("/courses/<int:id>")
+class ViewCourseById(Resource):
+    @ns.marshal_with(course_model)
+    def get(self, id):
+        return Course.query.get(id)
+
 
 @ns.route("/students")
 class ViewStudents(Resource):
@@ -42,4 +51,8 @@ class ViewStudents(Resource):
         db.session.commit()
         return student, 201
 
-
+@ns.route("/students/<int:id>")
+class ViewStudentById(Resource):
+    @ns.marshal_with(student_model)
+    def get(self, id):
+        return Student.query.get(id)
